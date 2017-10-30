@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "express": "^4.16.2",
+    "firebase": "^4.6.0",
     "websocket": "^1.0.25"
   },
   "devDependencies": {},
