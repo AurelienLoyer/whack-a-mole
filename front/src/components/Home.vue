@@ -13,8 +13,6 @@ export default {
     return {
     }
   },
-  sockets:{
-  },
 }
 </script>
 

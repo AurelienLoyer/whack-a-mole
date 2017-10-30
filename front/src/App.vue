@@ -8,6 +8,9 @@
 
 export default {
   name: 'app',
+  mounted() {
+    this.$options.sockets.onmessage = (message) => console.log(message.data)
+  }
 }
 </script>
 

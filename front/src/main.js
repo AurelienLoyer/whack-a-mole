@@ -2,10 +2,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueResource from 'vue-resource'
 import Router from './Router'
-import VueSocketio from 'vue-socket.io';
 import env from 'env'
+import VueNativeSock from 'vue-native-websocket'
 
-Vue.use(VueSocketio, env.socket_url);
+console.log(env.socket_url);
+
+Vue.use(VueNativeSock, env.socket_url)
+
 Vue.use(VueResource)
 
 new Vue({
