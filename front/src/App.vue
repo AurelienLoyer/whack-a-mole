@@ -1,44 +1,34 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <img id="logo" src="../statics/img/logo.png" alt="Zenika logo" height="200">
+    <router-view/>
   </div>
 </template>
 
 <script>
-
-export default {
-  name: 'app',
-  mounted() {
-    this.$options.sockets.onmessage = (message) => console.log(message.data)
-  }
-}
+  export default {
+    name: 'app',
+  };
 </script>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style>
 
-h1, h2 {
-  font-weight: normal;
-}
+  body {
+    background-color: rgb(15, 29, 42);
+  }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+  }
 
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
+  #logo {
+    position: fixed;
+    z-index: 1;
+  }
 </style>
