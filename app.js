@@ -17,21 +17,8 @@ const keymap = [
 
 console.log(`Server Run / Port ${port}`)
 
-app.use(express.static('front'));
-
-app.all('*', function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next();
-});
-
-app.get('/', function (req, res, next) {
-  res.sendfile(`${__dirname}/front/index.html`);
-  app.use(express.static(`${__dirname}/front`));
-});
-
 /**
- * Listen Keypress for dev
+ * Listen Keypress for dev :)
  */
 
 keypress(process.stdin);
@@ -40,6 +27,7 @@ process.stdin.on('keypress', function (ch, key) {
   if(key) {
     let index = keymap.indexOf(key.name) + 1
     console.log(index)
+    broadcast({ type: 'press', data: index })
   }
   if (key && key.ctrl && key.name == 'c') {
     process.stdin.pause();
@@ -53,6 +41,19 @@ process.stdin.resume();
 /**
  * HTTP server
  */
+
+app.use(express.static('front'));
+
+app.all('*', function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
+
+app.get('/', function (req, res, next) {
+  res.sendfile(`${__dirname}/front/index.html`);
+  app.use(express.static(`${__dirname}/front`));
+});
 
 server.listen(port)
 
@@ -115,3 +116,7 @@ wsServer.on('request', function (request) {
   });
 
 });
+
+function broadcast(message) {
+  clients.map( client => client.send(JSON.stringify(message)))
+}
