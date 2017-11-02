@@ -1,6 +1,6 @@
 <template>
     <div class="board">
-        <ball v-for="(ball, i) in buttons" :key="`ball${i}`" :pop="ball.isActive" @poped="ball.isActive = false" :id="i"
+        <ball v-for="(ball, i) in buttons" :key="`ball${i}`" :press="ball.isPress" :pop="ball.isActive" @poped="ball.isActive = false" :id="i"
               :image="ball.image"></ball>
     </div>
 </template>
@@ -11,6 +11,7 @@
   const defaultBtnModel = {
     color: 'firebrick',
     isActive: false,
+    isPress: false,
     image: '',
   };
 
@@ -30,28 +31,20 @@
       };
     },
     mounted() {
-      setInterval(() => {
-        const ball = this.getRandomBall();
-        ball.image = this.getRandomImage();
-        ball.isActive = true;
-      }, 500);
+      this.$options.sockets.onmessage = (message) => {
+        let parsedMessage = JSON.parse(message.data)
+
+        if( parsedMessage.type === 'press' && parsedMessage.data && parsedMessage.data <= this.buttons.length ) {
+          this.press(parsedMessage.data - 1)
+        }
+      }
     },
     methods: {
-      getRandomBall() {
-        return this.buttons[this.getRandomBallIndex()];
-      },
-      getRandomBallIndex() {
-        const randomNumber = (Math.random() * 8) + 1;
-        this.buttonsIndex[Math.floor(randomNumber)] = true;
-        return Math.floor(randomNumber);
-      },
-      getRandomImage() {
-        return `./statics/img/Zenika-${this.getRandomImageIndex()}.jpg`;
-      },
-      getRandomImageIndex() {
-        const randomNumber = (Math.random() * 23) + 1;
-        this.imagesIndex[Math.floor(randomNumber)] = true;
-        return Math.floor(randomNumber);
+      press(index) {
+        this.buttons[index].isPress = true
+        setTimeout(()=> {
+          this.buttons[index].isPress = false
+        },300)
       },
     },
   };

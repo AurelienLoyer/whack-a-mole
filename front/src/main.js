@@ -7,7 +7,7 @@ import VueNativeSock from 'vue-native-websocket'
 
 console.log(env.socket_url);
 
-Vue.use(VueNativeSock, env.socket_url)
+Vue.use(VueNativeSock, env.socket_url, { format: 'json' })
 
 Vue.use(VueResource)
 

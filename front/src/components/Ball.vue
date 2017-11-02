@@ -21,23 +21,18 @@
                 </path>
 
             </g>
-            <g :id="`ball${id}`">
+            <g :id="`ball-${id}`">
                 <image  width="500" height="500" x="-50" y="400"  :xlink:href="image" clip-path="url(#circleView)" />
             </g>
         </g>
         <g>
-            <image id="tata" width="0" height="0" x="200" y="200" xlink:href="../../statics/img/bam.png" />
+            <image :id="`bam-${id}`" class="bam" width="0" height="0" x="200" y="200" xlink:href="../../statics/img/bam.png" />
         </g>
     </svg>
 </template>
 
 <script>
   import { TimelineMax } from 'gsap';
-
-  const defaultBtnModel = {
-    color: 'firebrick',
-    isActive: false,
-  };
 
   export default {
     name: 'Hole',
@@ -55,16 +50,15 @@
         type: Boolean,
         required: false,
       },
+      press: {
+        type: Boolean,
+        required: false,
+      },
+
     },
     data() {
       return {
         locked: false,
-        usersWithAvatar: [],
-        buttons: [
-          { ...defaultBtnModel }, { ...defaultBtnModel }, { ...defaultBtnModel },
-          { ...defaultBtnModel }, { ...defaultBtnModel }, { ...defaultBtnModel },
-          { ...defaultBtnModel }, { ...defaultBtnModel }, { ...defaultBtnModel },
-        ],
       };
     },
     watch: {
@@ -73,29 +67,32 @@
           this.jump();
         }
       },
+      press(value) {
+        if (value) {
+          this.bam();
+        }
+      },
+
     },
     mounted() {
-      document.addEventListener('keyup', () => {
-        this.bam();
-      });
     },
     methods: {
       bam() {
-        const tata = document.getElementById('tata');
-        tata.setAttribute('x', '0');
-        tata.setAttribute('y', '0');
-        tata.setAttribute('width', '400');
-        tata.setAttribute('height', '400');
+        const bamIcon = document.getElementById(`bam-${this.id}`);
+        bamIcon.setAttribute('x', '0');
+        bamIcon.setAttribute('y', '0');
+        bamIcon.setAttribute('width', '400');
+        bamIcon.setAttribute('height', '400');
         setTimeout(() => {
-          tata.setAttribute('x', '200');
-          tata.setAttribute('y', '200');
-          tata.setAttribute('width', '0');
-          tata.setAttribute('height', '0');
+          bamIcon.setAttribute('x', '200');
+          bamIcon.setAttribute('y', '200');
+          bamIcon.setAttribute('width', '0');
+          bamIcon.setAttribute('height', '0');
         }, 300);
       },
       jump() {
         const tl = new TimelineMax({ repeat: 0 });
-        tl.to(`#ball${this.id}`, 1, { y: -400, yoyo: true, repeat: 1 });
+        tl.to(`#ball-${this.id}`, 1, { y: -400, yoyo: true, repeat: 1 });
         this.isLocked = true;
         setTimeout(() => {
           this.isLocked = false;
@@ -113,7 +110,7 @@
         height: 33%;
     }
 
-    #tata {
+    .bam {
         transition: all 0.3s;
     }
 </style>
