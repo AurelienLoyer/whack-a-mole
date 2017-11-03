@@ -6,10 +6,18 @@
 
 <style lang="scss" scoped>
     footer{
+
         position: fixed;
-        bottom: 10px;
+        padding: 10px;
+        bottom: 0;
+        width: 100%;
+        color: white;
+        background: #23282a;
+        z-index: 99;
+        border-top: 2px solid #23282a;
+
         i{
-            color:red;
+            color:#C62C41;
             animation: heartbit 1s infinite;
         }
 
