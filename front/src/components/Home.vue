@@ -27,4 +27,12 @@
 </script>
 
 <style lang="scss" scoped>
+
+    form{
+        input{
+            display:block;
+            margin:auto;
+        }
+    }
+
 </style>
