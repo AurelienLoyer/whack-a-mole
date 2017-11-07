@@ -12,7 +12,6 @@ export default {
   name: 'countdown',
   props: {
     seconds: Number,
-    countdown: Boolean,
     message: String,
     start: {
       type: Boolean,
@@ -22,22 +21,21 @@ export default {
   data() {
     return {
       timer: null,
-      time: "",
-      label: this.message ? this.message : "Time's up!",
+      time: '00:00',
+      label: this.message ? this.message : 'Time\'s up!',
     };
   },
   computed: {
 
   },
-
   mounted() {
 
   },
   methods: {
-    start() {
-
+    startCount() {
+        window.console.log('starttttttt')
     },
-    stop() {
+    stopCount() {
 
     },
     timeExpire() {
@@ -48,7 +46,7 @@ export default {
   watch: {
     start(newValue) {
       if (newValue) {
-        this.start();
+        this.startCount();
       } else {
         this.stop();
       }
@@ -56,3 +54,12 @@ export default {
   }
 };
 </script>
+
+<style>
+    .countdown{
+        width:25%;
+        text-align: center;
+        font-size: 4em;
+        font-weight: bold;
+    }
+</style>
