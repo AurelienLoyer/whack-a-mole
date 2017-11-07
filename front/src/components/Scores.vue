@@ -16,7 +16,7 @@
                 <span class="num">2</span>
                 <span class="res">2400</span>
                 <span class="who">Magdalena.D</span>
-                <span class="you">< VOUS ></span>
+                <span class="you" v-if="id">< VOUS ></span>
             </li>
             <li>
                 <span class="num">3</span>
@@ -43,7 +43,18 @@
 </template>
 
 <script>
-
+    export default {
+        name: "scoes",
+        props: [
+            'id',
+        ],
+        data() {
+            return {
+            }
+        },
+        mounted() {
+        }
+    };
 </script>
 
 <style lang="scss" scoped>

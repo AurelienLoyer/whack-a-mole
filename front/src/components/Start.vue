@@ -36,7 +36,7 @@
 
 <style lang="scss" scoped>
     .count {
-        animation-name: example;
+        animation-name: anim;
         animation-duration: 1s;
         animation-iteration-count: 4;
         color: #0F1E2A;
@@ -49,7 +49,7 @@
         font-weight: bold;
     }
 
-    @keyframes example {
+    @keyframes anim {
         0% {
             display: block;
             color: #0F1E2A;

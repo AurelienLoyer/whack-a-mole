@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="content">
-            <scores></scores>
+            <scores :id="12"></scores>
             <zenikien></zenikien>
         </div>
 
@@ -33,6 +33,12 @@ export default {
     "v-footer": Footer,
     Scores,
     Zenikien
+  },
+  mounted() {
+    this.$options.sockets.onmessage = message => {
+      const parsedMessage = JSON.parse(message.data);
+      window.console.log(parsedMessage);
+    };
   }
 };
 </script>
