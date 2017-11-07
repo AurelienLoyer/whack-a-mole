@@ -10,9 +10,9 @@ const port = config.PORT
 // list of currently connected clients (users)
 const clients = []
 const keymap = [
-  'a','z','e',
-  'q','s','d',
-  'w','x','c',
+    'a', 'z', 'e',
+    'q', 's', 'd',
+    'w', 'x', 'c',
 ]
 
 console.log(`Server Run / Port ${port}`)
@@ -24,15 +24,15 @@ console.log(`Server Run / Port ${port}`)
 keypress(process.stdin);
 
 process.stdin.on('keypress', function (ch, key) {
-  if(key) {
-    let index = keymap.indexOf(key.name) + 1
-    console.log(index)
-    broadcast({ type: 'press', data: index })
-  }
-  if (key && key.ctrl && key.name == 'c') {
-    process.stdin.pause();
-    process.exit();
-  }
+    if (key) {
+        let index = keymap.indexOf(key.name) + 1
+        console.log(index)
+        broadcast({ type: 'press', data: index })
+    }
+    if (key && key.ctrl && key.name == 'c') {
+        process.stdin.pause();
+        process.exit();
+    }
 });
 
 process.stdin.setRawMode(true);
@@ -45,26 +45,25 @@ process.stdin.resume();
 app.use(express.static('front'));
 
 app.all('*', function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next();
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
 });
 
 app.get('/', function (req, res, next) {
-  res.sendfile(`${__dirname}/front/index.html`);
-  app.use(express.static(`${__dirname}/front`));
+    res.sendfile(`${__dirname}/front/index.html`);
+    app.use(express.static(`${__dirname}/front`));
 });
 
 server.listen(port)
 
 app.get('/scores', function (req, res) {
-  res.json({
-  });
+    res.json({
+    });
 });
 
 app.get('/consultants', function (req, res) {
-  res.json({
-  });
+    res.text('OK');
 });
 
 /**
@@ -72,13 +71,13 @@ app.get('/consultants', function (req, res) {
  */
 
 firebase.initializeApp({
-  apiKey: config.FIREBASE_API_KEY,
-  databaseURL: `https://${config.FIREBASE_ID}.firebaseio.com`
+    apiKey: config.FIREBASE_API_KEY,
+    databaseURL: `https://${config.FIREBASE_ID}.firebaseio.com`
 });
 
 const zenikien = firebase.database().ref('zenikien');
-zenikien.on("value", function(snapshot) {
-  console.log(snapshot.val())
+zenikien.on("value", function (snapshot) {
+    console.log(snapshot.val())
 });
 
 /**
@@ -86,37 +85,115 @@ zenikien.on("value", function(snapshot) {
  */
 
 wsServer = new WebSocketServer({
-  httpServer: server,
-  autoAcceptConnections: false
+    httpServer: server,
+    autoAcceptConnections: false
 });
 
 wsServer.on('request', function (request) {
-  console.log((new Date()) + ' Connection from origin ' + request.origin + '.');
+    console.log((new Date()) + ' Connection from origin ' + request.origin + '.');
 
-  var connection = request.accept(null, request.origin);
-  var index = clients.push(connection) - 1;
+    let connection = request.accept(null, request.origin);
+    let index = clients.push(connection) - 1;
 
-  console.log((new Date()) + ' Connection accepted.');
-  console.log((new Date()) + ' Clients connected : ' + clients.length);
+    console.log((new Date()) + ' Connection accepted.');
+    console.log((new Date()) + ' Clients connected : ' + clients.length);
 
-  // send back scores ...
-  connection.send(JSON.stringify({ type: 'scores', data: [] }));
-  connection.send(JSON.stringify({ type: 'zenikien', data: [] }));
+    // client sent some message
+    connection.on('message', function (message) {
+        let decodedMessage = JSON.parse(message.utf8Data);
+        console.log(decodedMessage)
+        if (decodedMessage.type === 'start') {
+            startGame(decodedMessage.data);
+        }
+    });
 
-  // client sent some message
-  connection.on('message', function (message) {
-    console.log(`message : ${message}`)
-  });
-
-  // user disconnected
-  connection.on('close', function (connection) {
-    console.log((new Date()) + " Peer " + connection.remoteAddress + " disconnected.");
-    // remove user from the list of connected clients
-    clients.splice(index, 1);
-  });
+    // user disconnected
+    connection.on('close', function (connection) {
+        console.log(connection)
+        console.log((new Date()) + " Peer " + connection.remoteAddress + " disconnected.");
+        // remove user from the list of connected clients
+        clients.splice(index, 1);
+    });
 
 });
 
 function broadcast(message) {
-  clients.map( client => client.send(JSON.stringify(message)))
+    console.log('\x1b[33m%s\x1b[0m', JSON.stringify(message));
+    clients.map(client => client.send(JSON.stringify(message)));
+}
+
+/**
+ * Game functions and settings
+ */
+
+let currentUser = {};
+const partyTime = 10;
+let partyLoop;
+lastPopIndex = 99;
+lastPopImage = 99;
+
+function startGame(user) {
+    currentUser = user;
+    broadcast({
+        type: 'game',
+        data: {
+            time: partyTime,
+            user: currentUser,
+        }
+    })
+
+    // wait 3 secondes (3 2 1 GO display...)
+    setTimeout(() => {
+        sendRandoms();
+    }, 3000);
+}
+
+function sendRandoms() {
+    let i = 0;
+    partyLoop = setInterval(() => {
+        broadcast({
+            type: 'pop',
+            data : {
+                index: getRandomBallIndex(),
+                image: getRandomImage()
+            }
+        });
+        i++;
+        if (i > partyTime){
+            endGame()
+        }
+    }, 1000)
+}
+
+function endGame() {
+    clearInterval(partyLoop)
+    broadcast({
+        type: 'end',
+        data: {
+            score: 2451,
+            user: currentUser,
+        }
+    })
+}
+
+function getRandomBallIndex() {
+    let randomNumber = Math.floor((Math.random() * 8) + 1);
+    while(randomNumber === lastPopIndex) {
+        randomNumber = Math.floor((Math.random() * 8) + 1);
+    }
+    lastPopIndex = randomNumber
+    return randomNumber;
+}
+
+function getRandomImage() {
+    return `./statics/img/Zenika-${getRandomImageIndex()}.jpg`;
+}
+
+function getRandomImageIndex() {
+    let randomNumber = Math.floor((Math.random() * 23) + 1);
+    while(randomNumber === lastPopIndex) {
+        randomNumber = Math.floor((Math.random() * 23) + 1);
+    }
+    lastPopImage = randomNumber
+    return randomNumber;
 }
