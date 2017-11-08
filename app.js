@@ -101,7 +101,6 @@ wsServer.on('request', function (request) {
     // client sent some message
     connection.on('message', function (message) {
         let decodedMessage = JSON.parse(message.utf8Data);
-        console.log(decodedMessage)
         if (decodedMessage.type === 'start') {
             startGame(decodedMessage.data);
         }
@@ -127,13 +126,15 @@ function broadcast(message) {
  */
 
 let currentUser = {};
-const partyTime = 10;
+const partyTime = 90000;
 let partyLoop;
 lastPopIndex = 99;
 lastPopImage = 99;
 
 function startGame(user) {
     currentUser = user;
+    clearInterval(partyLoop)
+
     broadcast({
         type: 'game',
         data: {
@@ -151,10 +152,16 @@ function startGame(user) {
 function sendRandoms() {
     let i = 0;
     partyLoop = setInterval(() => {
+        let index = getRandomBallIndex();
+        if (index == 1){
+            // leds[index].writeSync(1);
+        }else{
+            // leds[1].writeSync(0);
+        }
         broadcast({
             type: 'pop',
             data : {
-                index: getRandomBallIndex(),
+                index: index,
                 image: getRandomImage()
             }
         });
@@ -197,3 +204,27 @@ function getRandomImageIndex() {
     lastPopImage = randomNumber
     return randomNumber;
 }
+
+/**
+ * Hardware code
+ */
+
+const onoff = require('onoff');
+const Gpio = onoff.Gpio;
+
+const leds = [
+    new Gpio(37, 'out'), new Gpio(37, 'out'), new Gpio(37, 'out'),
+    new Gpio(37, 'out'), new Gpio(37, 'out'), new Gpio(37, 'out'),
+    new Gpio(37, 'out'), new Gpio(37, 'out'), new Gpio(37, 'out'),
+];
+
+const buttons = require('./rpi-gpio-buttons')([40]);
+buttons.setTiming({
+    pressed: 100,
+    clicked: 100,
+});
+
+buttons.on('pressed', function (pin) {
+    console.log(pin);
+    broadcast({ type: 'press', data: 2 });
+});
