@@ -7,12 +7,19 @@ const WebSocketServer = require('websocket').server;
 const keypress = require('keypress');
 const port = config.PORT
 
-// list of currently connected clients (users)
 const clients = []
 const keymap = [
     'a', 'z', 'e',
     'q', 's', 'd',
     'w', 'x', 'c',
+]
+const buttonsPins = [
+    40, 35, 11, 38, 33, 13, 37, 32
+]
+const ledsPins = [
+    31, 24, 23,
+    21, 22, 19,
+    18, 15, 16
 ]
 
 console.log(`Server Run / Port ${port}`)
@@ -26,7 +33,6 @@ keypress(process.stdin);
 process.stdin.on('keypress', function (ch, key) {
     if (key) {
         let index = keymap.indexOf(key.name) + 1
-        console.log(index)
         broadcast({ type: 'press', data: index })
     }
     if (key && key.ctrl && key.name == 'c') {
@@ -154,9 +160,10 @@ function sendRandoms() {
     partyLoop = setInterval(() => {
         let index = getRandomBallIndex();
         if (index == 1){
-            // leds[index].writeSync(1);
+             leds[0].writeSync(1);
+             console.log('led ON !');
         }else{
-            // leds[1].writeSync(0);
+            leds[0].writeSync(0);
         }
         broadcast({
             type: 'pop',
@@ -213,18 +220,17 @@ const onoff = require('onoff');
 const Gpio = onoff.Gpio;
 
 const leds = [
-    new Gpio(37, 'out'), new Gpio(37, 'out'), new Gpio(37, 'out'),
-    new Gpio(37, 'out'), new Gpio(37, 'out'), new Gpio(37, 'out'),
-    new Gpio(37, 'out'), new Gpio(37, 'out'), new Gpio(37, 'out'),
+    new Gpio(ledsPins[0], 'out'), new Gpio(ledsPins[1], 'out'), new Gpio(ledsPins[2], 'out'),
+    new Gpio(ledsPins[3], 'out'), new Gpio(ledsPins[4], 'out'), new Gpio(ledsPins[5], 'out'),
+    new Gpio(ledsPins[6], 'out'), new Gpio(ledsPins[7], 'out'), new Gpio(ledsPins[8], 'out'),
 ];
 
-const buttons = require('./rpi-gpio-buttons')([40]);
+const buttons = require('rpi-gpio-buttons')(buttonsPins);
 buttons.setTiming({
     pressed: 100,
     clicked: 100,
 });
 
 buttons.on('pressed', function (pin) {
-    console.log(pin);
-    broadcast({ type: 'press', data: 2 });
+    broadcast({ type: 'press', data: buttonsPins.indexOf(pin) + 1 });
 });
