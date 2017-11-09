@@ -4,28 +4,28 @@
         <ul>
             <li>
                 <div class="circle">
-                    <img src="../../statics/img/Zenika-6.jpg"/>
+                    <img src="/statics/img/Zenika-6.jpg"/>
                 </div>
                 <span class="name">Aurelien.L</span>
                 <span class="hit">131</span>
             </li>
             <li>
                 <div class="circle">
-                    <img src="../../statics/img/Zenika-7.jpg"/>
+                    <img src="/statics/img/Zenika-7.jpg"/>
                 </div>
                 <span class="name">Guillaume.D</span>
                 <span class="hit">90</span>
             </li>
             <li>
                 <div class="circle">
-                    <img src="../../statics/img/Zenika-8.jpg"/>
+                    <img src="/statics/img/Zenika-8.jpg"/>
                 </div>
                 <span class="name">Vincent.V</span>
                 <span class="hit">31</span>
             </li>
             <li>
                 <div class="circle">
-                    <img src="../../statics/img/Zenika-17.jpg"/>
+                    <img src="/statics/img/Zenika-17.jpg"/>
                 </div>
                 <span class="name">Nathan.D</span>
                 <span class="hit">12</span>

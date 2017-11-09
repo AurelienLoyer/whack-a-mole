@@ -1,7 +1,8 @@
 #!/bin/bash
 
+# pull force
 git fetch --all
-git pull
+git reset --hard origin/master
 
 npm start
 

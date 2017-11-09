@@ -26,7 +26,7 @@
             </g>
         </g>
         <g>
-            <image :id="`bam-${id}`" class="bam" width="0" height="0" x="200" y="200" xlink:href="../../statics/img/bam.png" />
+            <image :id="`bam-${id}`" class="bam" width="0" height="0" x="200" y="200" xlink:href="/statics/img/bam.png" />
         </g>
     </svg>
 </template>
