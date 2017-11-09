@@ -72,6 +72,7 @@ wsServer.on('request', function(request) {
     // Gpio make the bridge
     if (GpioManager) {
         const gpioManager = new GpioManager()
+        gpioManager.addListeners(game.listener.bind(wsManager))
     }
 })
 

@@ -14,9 +14,9 @@ module.exports = class Game extends ManagerInterface {
         }
         this.balls =
             [
-                { ...ballModel }, { ...ballModel }, { ...ballModel },
-                { ...ballModel }, { ...ballModel }, { ...ballModel },
-                { ...ballModel }, { ...ballModel }, { ...ballModel },
+                Object.assign({}, ballModel), Object.assign({}, ballModel), Object.assign({}, ballModel),
+                Object.assign({}, ballModel), Object.assign({}, ballModel), Object.assign({}, ballModel),
+                Object.assign({}, ballModel), Object.assign({}, ballModel), Object.assign({}, ballModel),
             ]
 
         this.partyDuration = 30000
