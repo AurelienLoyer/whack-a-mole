@@ -15,6 +15,7 @@ module.exports = class FirebaseManager extends ManagerInterface {
 
         firebase.auth().signInAnonymously().catch(function(error) {
             console.error(`Firebase authentication error ${error.code} : ${error.message}`)
+            process.exit()
         })
 
         firebase.auth().onAuthStateChanged(function(mess) {
