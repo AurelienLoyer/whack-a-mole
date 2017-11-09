@@ -44,7 +44,7 @@
             "v-footer": Footer
         },
         mounted() {
-            this.$options.sockets.onmessage = (message) => {
+            this.$options.sockets.onmessage = (message = {type : '', data: ''}) => {
                 const parsedMessage = JSON.parse(message.data)
                 if (parsedMessage.type === 'game') {
                     this.$router.push('start')

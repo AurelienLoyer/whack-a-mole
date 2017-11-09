@@ -8,6 +8,7 @@
     "express": "^4.16.2",
     "firebase": "^4.6.0",
     "keypress": "^0.2.1",
+    "onoff": "^1.1.8",
     "rpi-gpio": "^0.9.1",
     "rpi-gpio-buttons": "^1.0.3",
     "websocket": "^1.0.25"
@@ -15,7 +16,7 @@
   "devDependencies": {},
   "scripts": {
     "start": "npm run dev",
-    "dev": "node app.js | cd front && npm run dev",
+    "dev": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "expose": "node app.js ngrok"
   },
