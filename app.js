@@ -8,6 +8,7 @@ const port = config.PORT
 const Game = require('./server/Game')
 const WsManager = require('./server/WsConnectionManager')
 const KeyboardManager = require('./server/KeyboardManager')
+const FirebaseManager = require('./server/FirebaseManager')
 
 const isPi = require('./server/isPi')
 
@@ -59,15 +60,19 @@ wsServer.on('request', function(request) {
     const game = new Game()
     const wsManager = new WsManager(connection)
     const keyBoardManager = new KeyboardManager()
+    const firebaseManager = new FirebaseManager()
 
     // Game listen all event incoming from the Front
     wsManager.addListeners(game.listener.bind(game))
 
     // WS will send any game action
     game.addListeners(wsManager.listener.bind(wsManager))
+    game.addListeners(firebaseManager.listener.bind(firebaseManager))
 
     keyBoardManager.addListeners(game.listener.bind(game))
     keyBoardManager.addListeners(wsManager.listener.bind(wsManager))
+
+    firebaseManager.addListeners(wsManager.listener.bind(wsManager))
 
     // Gpio make the bridge
     if (GpioManager) {
