@@ -68,6 +68,7 @@
                     this.users = [].concat(Object.values(message.data))
                 }
                 if (message.type === 'game') {
+                    localStorage.setItem('time', message.data.time / 1000)
                     this.$router.push('start')
                 }
             },

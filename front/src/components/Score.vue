@@ -9,16 +9,9 @@
 
     export default {
         name: "score",
-        data() {
-            return {
-                score: 0,
-            }
-        },
-        mounted() {
-            setInterval(() => {
-                this.score += 100
-            }, 1000)
-        },
+        props: [
+            'score',
+        ],
     };
 
 </script>

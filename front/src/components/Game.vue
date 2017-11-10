@@ -1,6 +1,6 @@
 <template>
     <div class="game">
-        <score></score>
+        <score :score="score"></score>
         <board :message="boardMessage" @click="start = true"></board>
         <countdown :seconde="120"></countdown>
     </div>
@@ -23,6 +23,7 @@
         data() {
             return {
                 start: false,
+                score: 0,
                 boardMessage: '',
             }
         },
@@ -33,6 +34,9 @@
 
                     if (parsedMessage.type === 'end') {
                         this.$router.push('end', parsedMessage.data)
+                    }
+                    else if(parsedMessage.type === 'bamZenikien') {
+                        this.score = parsedMessage.data.user.score
                     }
                     else {
                         this.boardMessage = parsedMessage
