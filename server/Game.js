@@ -21,7 +21,7 @@ module.exports = class Game extends ManagerInterface {
             Object.assign({}, ballModel), Object.assign({}, ballModel), Object.assign({}, ballModel),
         ]
 
-        this.partyDuration = 15000
+        this.partyDuration = 45000
         this.partyTimeoutID = -1
 
         this.jumpIntervalDuration = 300
