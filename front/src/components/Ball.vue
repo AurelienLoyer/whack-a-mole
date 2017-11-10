@@ -32,68 +32,62 @@
 </template>
 
 <script>
-  import { TimelineMax } from 'gsap';
+    import { TimelineMax } from 'gsap';
 
-  export default {
-    name: 'Hole',
-    props: {
-      image: {
-        type: String,
-        required: true,
-        default: '',
-      },
-      id: {
-        type: [String, Number],
-        required: true,
-      },
-      pop: {
-        type: Boolean,
-        required: false,
-      },
-      press: {
-        type: Boolean,
-        required: false,
-      },
+    export default {
+        name: 'Hole',
+        props: {
+            image: {
+                type: String,
+                required: true,
+                default: '',
+            },
+            id: {
+                type: [String, Number],
+                required: true,
+            },
+            pop: {
+                type: Boolean,
+                required: false,
+            },
+            press: {
+                type: Boolean,
+                required: false,
+            },
 
-    },
-    data() {
-      return {
-        locked: false,
-      };
-    },
-    watch: {
-      pop(value) {
-        if (value && !this.isLocked) {
-          this.jump();
-        }
-      },
-      press(value) {
-          this.bam();
-      },
-
-    },
-    mounted() {
-    },
-    methods: {
-      bam() {
-        const bamIcon = document.getElementById(`bam-${this.id}`);
-        bamIcon.setAttribute('x', '0');
-        bamIcon.setAttribute('y', '0');
-        bamIcon.setAttribute('width', '400');
-        bamIcon.setAttribute('height', '400');
-        setTimeout(() => {
-          bamIcon.setAttribute('x', '200');
-          bamIcon.setAttribute('y', '200');
-          bamIcon.setAttribute('width', '0');
-          bamIcon.setAttribute('height', '0');
-        }, 300);
-      },
-      jump() {
-        const tl = new TimelineMax({ repeat: 0 });
-        tl.to(`#ball-${this.id}`, 1, { y: -400, yoyo: true, repeat: 1 });
-      },
-    },
-  };
+        },
+        watch: {
+            pop(value) {
+                if (value) {
+                    this.jump();
+                }
+            },
+            press(value) {
+                if (value) {
+                    this.bam();
+                }
+            },
+        },
+        methods: {
+            bam() {
+                const bamIcon = document.getElementById(`bam-${this.id}`);
+                bamIcon.setAttribute('x', '0');
+                bamIcon.setAttribute('y', '0');
+                bamIcon.setAttribute('width', '400');
+                bamIcon.setAttribute('height', '400');
+                setTimeout(() => {
+                    bamIcon.setAttribute('x', '200');
+                    bamIcon.setAttribute('y', '200');
+                    bamIcon.setAttribute('width', '0');
+                    bamIcon.setAttribute('height', '0');
+                }, 300);
+            },
+            jump() {
+                const tl = new TimelineMax({ repeat: 0 });
+                tl.to(`#ball-${this.id}`, 1, { y: -400, yoyo: true, repeat: 1 });
+            },
+        },
+    };
 </script>
 
 <style scoped>

@@ -53,6 +53,9 @@
             pop(index, image) {
                 this.buttons[index].isActive = true
                 this.buttons[index].image = image
+                setTimeout(() => {
+                    this.buttons[index].isActive = false
+                }, 2000)
             },
         },
     };

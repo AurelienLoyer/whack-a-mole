@@ -27,7 +27,7 @@ module.exports = class Game extends ManagerInterface {
         this.partyTimeoutID = -1
 
         this.jumpIntervalDuration = 800
-        this.jumpIntervalID = -1
+        this.jumpTimeoutID = -1
 
         this.jumpDuration = 2000
 
@@ -63,7 +63,16 @@ module.exports = class Game extends ManagerInterface {
     }
 
     sendRandoms() {
-        this.jumpIntervalDuration = this.jumpIntervalDuration - ((Date.now() - this.partyStartTimestamp) * 200 / 45000)
+        if ((Date.now() - this.partyStartTimestamp) > this.partyDuration * 0.25) {
+            this.jumpIntervalDuration = 750
+        }
+        if (this.partyStartTimestamp > this.partyDuration * 0.5) {
+            this.jumpIntervalDuration = 700
+        }
+        if (this.partyStartTimestamp > this.partyDuration * 0.75) {
+            this.jumpIntervalDuration = 600
+        }
+        // this.jumpIntervalDuration = this.jumpIntervalDuration - ((Date.now() - this.partyStartTimestamp) * 200 / 45000)
         let randomBallIndex = this.getRandomBallIndex()
 
         let ball = this.balls[randomBallIndex]
@@ -84,7 +93,7 @@ module.exports = class Game extends ManagerInterface {
                 startTimestamp: ball.startTimestamp,
             }
         })
-        this.jumpIntervalID = setTimeout(() => {
+        this.jumpTimeoutID = setTimeout(() => {
             this.sendRandoms()
         }, this.jumpIntervalDuration)
     }
@@ -109,7 +118,7 @@ module.exports = class Game extends ManagerInterface {
     }
 
     endGame() {
-        clearInterval(this.jumpIntervalID)
+        clearTimeout(this.jumpTimeoutID)
         clearTimeout(this.partyTimeoutID)
 
         this.broadcast({
@@ -123,10 +132,13 @@ module.exports = class Game extends ManagerInterface {
     getRandomBallIndex() {
         let randomNumber = this.getRandomIndex(this.balls.length - 1)
         const ball = this.balls[randomNumber]
+        let isJumping = ball && ((Date.now() - ball.jumpDuration) < ball.startTimestamp)
 
         // Exclude break pin + while CLEAN CODE
-        while (randomNumber === this.lastPopIndex && (ball && (Date.now() - ball.jumpDuration) < ball.startTimestamp) && randomNumber !== 8) {
+        while (randomNumber === this.lastPopIndex || isJumping || randomNumber === 8) {
             randomNumber = this.getRandomIndex(this.balls.length - 1)
+            const ball = this.balls[randomNumber]
+            isJumping = ball && ((Date.now() - ball.jumpDuration) < ball.startTimestamp)
         }
         this.lastPopIndex = randomNumber
         return randomNumber
@@ -138,11 +150,7 @@ module.exports = class Game extends ManagerInterface {
     }
 
     getRandomImageIndex(lastPopIndex) {
-        let randomNumber = this.getRandomIndex(this.zenikiens.length - 1) + 1
-        while (randomNumber === lastPopIndex) {
-            randomNumber = this.getRandomIndex(this.zenikiens.length - 1) + 1
-        }
-        return randomNumber;
+        return this.getRandomIndex(this.zenikiens.length - 1) + 1
     }
 
     getRandomIndex(maxIndex = 8) {
