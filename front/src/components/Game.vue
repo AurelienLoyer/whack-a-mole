@@ -2,7 +2,7 @@
     <div class="game">
         <score></score>
         <board @click="start = true"></board>
-        <countdown :seconde="120" :start="start"></countdown>
+        <countdown :seconde="120"></countdown>
     </div>
 </template>
 

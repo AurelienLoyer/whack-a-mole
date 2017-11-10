@@ -40,7 +40,7 @@
     width: 100%;
     min-height: 200px;
     h3{
-        text-align:center;
+        text-align: center;
     }
     ul {
       list-style: none;
