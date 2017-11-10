@@ -68,9 +68,7 @@
         }
       },
       press(value) {
-        if (value) {
           this.bam();
-        }
       },
 
     },

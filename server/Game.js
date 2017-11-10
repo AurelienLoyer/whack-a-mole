@@ -14,6 +14,7 @@ module.exports = class Game extends ManagerInterface {
     createScene() {
         const ballModel = {
             image: '',
+            startTimestamp: 0,
         }
         this.balls = [
             Object.assign({}, ballModel), Object.assign({}, ballModel), Object.assign({}, ballModel),
@@ -22,9 +23,10 @@ module.exports = class Game extends ManagerInterface {
         ]
 
         this.partyDuration = 45000
+        this.partyStartTimestamp = 0
         this.partyTimeoutID = -1
 
-        this.jumpIntervalDuration = 300
+        this.jumpIntervalDuration = 600
         this.jumpIntervalID = -1
 
         this.jumpDuration = 2000
@@ -53,7 +55,7 @@ module.exports = class Game extends ManagerInterface {
         // wait 3 secondes (3 2 1 GO display...)
         setTimeout(() => {
             this.sendRandoms();
-
+            this.partyStartTimestamp = Date.now()
             this.partyTimeoutID = setTimeout(() => {
                 this.endGame()
             }, this.partyDuration)
@@ -62,19 +64,22 @@ module.exports = class Game extends ManagerInterface {
 
     sendRandoms() {
         this.jumpIntervalID = setInterval(() => {
+            if (this.partyStartTimestamp === this.partyDuration / 2) {
+                this.jumpIntervalDuration = this.jumpIntervalDuration / 2
+            }
             let randomBallIndex = this.getRandomBallIndex()
 
             let ball = this.balls[randomBallIndex]
             ball.jumpDuration = this.jumpDuration
+            ball.image = this.getRandomImage()
             ball.startTimestamp = Date.now()
             ball.zenikienIndex = this.lastPopImageIndex
 
-            ball.image = this.getRandomImage()
 
             this.broadcast({
                 type: 'pop',
                 data: {
-                    index: this.getRandomBallIndex(),
+                    index: randomBallIndex,
                     image: ball.image,
                     zenikienIndex: ball.zenikienIndex,
                     userMail: this.currentUser.mail,
@@ -87,9 +92,12 @@ module.exports = class Game extends ManagerInterface {
     }
 
     onPress(ballIndex) {
-        if (ballIndex > 0 && ballIndex < this.balls.length - 1) {
+        if (ballIndex => 0 && ballIndex < this.balls.length) {
             const ball = this.balls[ballIndex]
-            if ((Date.now() - ball.jumpDuration) < ball.startTimestamp) {
+
+            // add 300 for padding with animation CLEAN CODE
+            if (ball && (Date.now() - (ball.jumpDuration - 300)) < ball.startTimestamp + 300 ) {
+
                 this.currentUser.score += 100
                 this.broadcast({
                     type: 'bamZenikien',
@@ -129,15 +137,15 @@ module.exports = class Game extends ManagerInterface {
     }
 
     getRandomImageIndex(lastPopIndex) {
-        let randomNumber = this.getRandomIndex(this.zenikiens.length - 1)
+        let randomNumber = this.getRandomIndex(this.zenikiens.length - 1) + 1
         while (randomNumber === lastPopIndex) {
-            randomNumber = this.getRandomIndex(this.zenikiens.length - 1)
+            randomNumber = this.getRandomIndex(this.zenikiens.length - 1) + 1
         }
         return randomNumber;
     }
 
     getRandomIndex(maxIndex = 8) {
-        return Math.floor((Math.random() * maxIndex) + 1)
+        return Math.floor((Math.random() * maxIndex))
     }
 
     getWinner() {
