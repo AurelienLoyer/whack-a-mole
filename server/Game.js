@@ -26,7 +26,7 @@ module.exports = class Game extends ManagerInterface {
         this.partyStartTimestamp = 0
         this.partyTimeoutID = -1
 
-        this.jumpIntervalDuration = 900
+        this.jumpIntervalDuration = 800
         this.jumpIntervalID = -1
 
         this.jumpDuration = 2000
@@ -63,15 +63,6 @@ module.exports = class Game extends ManagerInterface {
     }
 
     sendRandoms() {
-        if ((Date.now() - this.partyStartTimestamp) > this.partyDuration * 0.25) {
-            this.jumpIntervalDuration = 800
-        }
-        if ((Date.now() - this.partyStartTimestamp) > this.partyDuration * 0.5) {
-            this.jumpIntervalDuration = 700
-        }
-        if ((Date.now() - this.partyStartTimestamp) > this.partyDuration * 0.75) {
-            this.jumpIntervalDuration = 600
-        }
         this.jumpIntervalDuration = this.jumpIntervalDuration - ((Date.now() - this.partyStartTimestamp) * 200 / 45000)
         let randomBallIndex = this.getRandomBallIndex()
 
