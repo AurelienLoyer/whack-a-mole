@@ -91,11 +91,6 @@
       jump() {
         const tl = new TimelineMax({ repeat: 0 });
         tl.to(`#ball-${this.id}`, 1, { y: -400, yoyo: true, repeat: 1 });
-        this.isLocked = true;
-        setTimeout(() => {
-          this.isLocked = false;
-          this.$emit('poped');
-        }, tl.totalDuration() * 1000);
       },
     },
   };

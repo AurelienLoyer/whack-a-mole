@@ -26,7 +26,7 @@ module.exports = class Game extends ManagerInterface {
         this.partyStartTimestamp = 0
         this.partyTimeoutID = -1
 
-        this.jumpIntervalDuration = 600
+        this.jumpIntervalDuration = 900
         this.jumpIntervalID = -1
 
         this.jumpDuration = 2000
@@ -54,8 +54,8 @@ module.exports = class Game extends ManagerInterface {
 
         // wait 3 secondes (3 2 1 GO display...)
         setTimeout(() => {
-            this.sendRandoms();
             this.partyStartTimestamp = Date.now()
+            this.sendRandoms();
             this.partyTimeoutID = setTimeout(() => {
                 this.endGame()
             }, this.partyDuration)
@@ -63,31 +63,38 @@ module.exports = class Game extends ManagerInterface {
     }
 
     sendRandoms() {
-        this.jumpIntervalID = setInterval(() => {
-            if (this.partyStartTimestamp === this.partyDuration / 2) {
-                this.jumpIntervalDuration = this.jumpIntervalDuration / 2
+        if ((Date.now() - this.partyStartTimestamp) > this.partyDuration * 0.25) {
+            this.jumpIntervalDuration = 800
+        }
+        if ((Date.now() - this.partyStartTimestamp) > this.partyDuration * 0.5) {
+            this.jumpIntervalDuration = 700
+        }
+        if ((Date.now() - this.partyStartTimestamp) > this.partyDuration * 0.75) {
+            this.jumpIntervalDuration = 600
+        }
+        this.jumpIntervalDuration = this.jumpIntervalDuration - ((Date.now() - this.partyStartTimestamp) * 200 / 45000)
+        let randomBallIndex = this.getRandomBallIndex()
+
+        let ball = this.balls[randomBallIndex]
+        ball.jumpDuration = this.jumpDuration
+        ball.image = this.getRandomImage()
+        ball.startTimestamp = Date.now()
+        ball.zenikienIndex = this.lastPopImageIndex
+
+
+        this.broadcast({
+            type: 'pop',
+            data: {
+                index: randomBallIndex,
+                image: ball.image,
+                zenikienIndex: ball.zenikienIndex,
+                userMail: this.currentUser.mail,
+                jumpDuration: ball.jumpDuration,
+                startTimestamp: ball.startTimestamp,
             }
-            let randomBallIndex = this.getRandomBallIndex()
-
-            let ball = this.balls[randomBallIndex]
-            ball.jumpDuration = this.jumpDuration
-            ball.image = this.getRandomImage()
-            ball.startTimestamp = Date.now()
-            ball.zenikienIndex = this.lastPopImageIndex
-
-
-            this.broadcast({
-                type: 'pop',
-                data: {
-                    index: randomBallIndex,
-                    image: ball.image,
-                    zenikienIndex: ball.zenikienIndex,
-                    userMail: this.currentUser.mail,
-                    jumpDuration: ball.jumpDuration,
-                    startTimestamp: ball.startTimestamp,
-                }
-            })
-
+        })
+        this.jumpIntervalID = setTimeout(() => {
+            this.sendRandoms()
         }, this.jumpIntervalDuration)
     }
 
@@ -96,7 +103,7 @@ module.exports = class Game extends ManagerInterface {
             const ball = this.balls[ballIndex]
 
             // add 300 for padding with animation CLEAN CODE
-            if (ball && (Date.now() - (ball.jumpDuration - 300)) < ball.startTimestamp + 300 ) {
+            if (ball && (Date.now() - (ball.jumpDuration - 300)) < ball.startTimestamp + 300) {
 
                 this.currentUser.score += 100
                 this.broadcast({
@@ -124,7 +131,10 @@ module.exports = class Game extends ManagerInterface {
 
     getRandomBallIndex() {
         let randomNumber = this.getRandomIndex(this.balls.length - 1)
-        while (randomNumber === this.lastPopIndex) {
+        const ball = this.balls[randomNumber]
+
+        // Exclude break pin + while CLEAN CODE
+        while (randomNumber === this.lastPopIndex && (ball && (Date.now() - ball.jumpDuration) < ball.startTimestamp) && randomNumber !== 8) {
             randomNumber = this.getRandomIndex(this.balls.length - 1)
         }
         this.lastPopIndex = randomNumber
