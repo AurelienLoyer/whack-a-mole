@@ -1,8 +1,8 @@
 <template>
     <div class="zenikien">
-        <h3>Top 4 Consultants</h3>
+        <h3>Top {{sortedZenikiens.length}} Consultants</h3>
         <ul>
-            <li v-for="zenikien in zenikiens" :key="zenikien.name">
+            <li v-for="zenikien in sortedZenikiens" :key="zenikien.name">
                 <div class="circle">
                     <img :src="zenikien.image"/>
                 </div>
@@ -33,6 +33,11 @@
                 required: false,
             },
         },
+        computed:{
+            sortedZenikiens() {
+                return this.zenikiens.sort((b,a) => (a.hit > b.hit) ? 1 : ((b.hit > a.hit) ? -1 : 0)).slice(0, 4)
+            }
+        }
     };
 </script>
 

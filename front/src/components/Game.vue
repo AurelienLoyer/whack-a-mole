@@ -1,7 +1,7 @@
 <template>
     <div class="game">
         <score></score>
-        <board @click="start = true"></board>
+        <board :message="boardMessage" @click="start = true"></board>
         <countdown :seconde="120"></countdown>
     </div>
 </template>
@@ -23,11 +23,23 @@
         data() {
             return {
                 start: false,
+                boardMessage: '',
             }
         },
         mounted() {
+            setTimeout(() => {
+                this.$socket.onmessage = (message) => {
+                    const parsedMessage = JSON.parse(message.data)
 
-        }
+                    if (parsedMessage.type === 'end') {
+                        this.$router.push('end', parsedMessage.data)
+                    }
+                    else {
+                        this.boardMessage = parsedMessage
+                    }
+                }
+            }, 10)
+        },
     };
 
 </script>

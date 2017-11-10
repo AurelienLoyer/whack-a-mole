@@ -18,6 +18,7 @@ module.exports = class KeyboardManager extends ManagerInterface {
         process.stdin.on('keypress', (ch, key) => {
             if (key) {
                 let index = this.keymap.indexOf(key.name) + 1
+
                 this.broadcast({ type: 'press', data: index })
             }
             if (key && key.ctrl && key.name == 'c') {

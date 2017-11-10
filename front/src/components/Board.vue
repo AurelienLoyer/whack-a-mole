@@ -18,6 +18,9 @@
     export default {
         name: 'WhackAMole',
         components: { Ball },
+        props: [
+            'message'
+        ],
         data() {
             return {
                 usersWithAvatar: [],
@@ -30,22 +33,14 @@
                 buttonsIndex: [],
             };
         },
-        mounted() {
-            this.$options.sockets.onmessage = (message) => {
-                const parsedMessage = JSON.parse(message.data)
-
-                if (parsedMessage.type === 'press' && parsedMessage.data && parsedMessage.data <= this.buttons.length) {
-                    this.press(parsedMessage.data - 1)
+        watch: {
+            message() {
+                if (this.message.type === 'press' && this.message.data && this.message.data <= this.buttons.length) {
+                    this.press(this.message.data - 1)
                 }
-
-                if (parsedMessage.type === 'pop' && parsedMessage.data && parsedMessage.data.index <= this.buttons.length) {
-                    this.pop(parsedMessage.data.index - 1, parsedMessage.data.image)
+                if (this.message.type === 'pop' && this.message.data && this.message.data.index <= this.buttons.length) {
+                    this.pop(this.message.data.index - 1, this.message.data.image)
                 }
-
-                if (parsedMessage.type === 'end') {
-                    this.$router.push('end', parsedMessage.data)
-                }
-
             }
         },
         methods: {

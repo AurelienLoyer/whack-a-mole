@@ -16,12 +16,12 @@ module.exports = class Game extends ManagerInterface {
             image: '',
         }
         this.balls = [
-            { ...ballModel }, { ...ballModel }, { ...ballModel },
-            { ...ballModel }, { ...ballModel }, { ...ballModel },
-            { ...ballModel }, { ...ballModel }, { ...ballModel },
+            Object.assign({}, ballModel), Object.assign({}, ballModel), Object.assign({}, ballModel),
+            Object.assign({}, ballModel), Object.assign({}, ballModel), Object.assign({}, ballModel),
+            Object.assign({}, ballModel), Object.assign({}, ballModel), Object.assign({}, ballModel),
         ]
 
-        this.partyDuration = 45000
+        this.partyDuration = 15000
         this.partyTimeoutID = -1
 
         this.jumpIntervalDuration = 300
@@ -48,9 +48,6 @@ module.exports = class Game extends ManagerInterface {
                 time: this.partyDuration,
                 user: this.currentUser,
             }
-        })
-        this.broadcast({
-            type: 'getZenikiens'
         })
 
         // wait 3 secondes (3 2 1 GO display...)
@@ -128,7 +125,7 @@ module.exports = class Game extends ManagerInterface {
 
     getRandomImage() {
         this.lastPopImageIndex = this.getRandomImageIndex(this.lastPopImageIndex)
-        return `./statics/img/Zenika-${this.lastPopImageIndex}.jpg`
+        return `/statics/img/Zenika-${this.lastPopImageIndex}.jpg`
     }
 
     getRandomImageIndex(lastPopIndex) {

@@ -3,12 +3,11 @@
         <h3>Top 6 Joueurs</h3>
         <ul class="scores">
             <li v-for="(user, i) in users" :key="`user-${i}`">
-               <span v-if="i === 0" class="fa-stack fa-lg">
+                <span v-if="i === 0" class="fa-stack fa-lg num">
                     <i class="fa fa-circle fa-stack-2x"></i>
                     <i class="fa fa-trophy fa-stack-1x fa-inverse"></i>
                 </span>
-
-                <span class="num" v-else>i</span>
+                <span class="num" v-else>{{i + 1}}</span>
                 <span class="res">{{user.score}}</span>
                 <span class="who">{{user.name}}</span>
                 <span class="you" v-if="user.name === currentUser.name">< VOUS ></span>
