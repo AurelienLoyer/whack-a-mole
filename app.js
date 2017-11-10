@@ -64,14 +64,16 @@ wsServer.on('request', function(request) {
 
     // Game listen all event incoming from the Front
     wsManager.addListeners(game.listener.bind(game))
+    wsManager.addListeners(firebaseManager.listener.bind(firebaseManager))
 
     // WS will send any game action
-    game.addListeners(wsManager.listener.bind(wsManager))
     game.addListeners(firebaseManager.listener.bind(firebaseManager))
+    game.addListeners(wsManager.listener.bind(wsManager))
 
     keyBoardManager.addListeners(game.listener.bind(game))
     keyBoardManager.addListeners(wsManager.listener.bind(wsManager))
 
+    firebaseManager.addListeners(game.listener.bind(game))
     firebaseManager.addListeners(wsManager.listener.bind(wsManager))
 
     // Gpio make the bridge

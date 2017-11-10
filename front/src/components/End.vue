@@ -3,17 +3,17 @@
         <div class="header">
             <div class="particules"></div>
             <div class="header-content">
-                <h1>Magdalena.D</h1>
+                <h1>{{user.name}}</h1>
                 <h2>Votre score pour cette partie !</h2>
                 <div class="score">
-                    <div class="number">2400</div>
+                    <div class="number">{{user.score}}</div>
                     <div class="rubban">zenika points</div>
                 </div>
             </div>
         </div>
         <div class="content">
-            <scores :id="12"></scores>
-            <zenikien></zenikien>
+            <scores :id="12" :users="users" :currentUser="user"></scores>
+            <zenikien :zenikiens="zenikiens"></zenikien>
         </div>
 
         <div class="again" @click="$router.push('/')">
@@ -34,11 +34,42 @@
             Scores,
             Zenikien
         },
+        data() {
+            return {
+                zenikiens: [],
+                users: [],
+                user: {}
+            }
+        },
         mounted() {
-            this.$options.sockets.onmessage = message => {
-                const parsedMessage = JSON.parse(message.data);
-                window.console.log(`${message.type} : `, parsedMessage);
-            };
+            setTimeout(() => {
+                this.$socket.send(JSON.stringify({ type: 'getZenikiens' }))
+                this.$socket.send(JSON.stringify({ type: 'getUsers' }))
+                this.$socket.send(JSON.stringify({ type: 'getWinner' }))
+                this.$socket.onmessage = (message) => {
+                  window.console.log('%c ', 'color:blue', message.data)
+                    const parsedMessage = JSON.parse(message.data)
+                    this.processData(parsedMessage)
+                }
+
+            }, 10)
+        },
+
+        methods: {
+            processData(message) {
+                if (message.type === 'zenikien') {
+                  window.console.log('%c ', 'color:blue', message.data)
+                    this.zenikiens = Object.values(message.data)
+                }
+                if (message.type === 'users') {
+                    this.users = Object.values(message.data)
+                }
+
+                if (message.type === 'winner') {
+                    window.console.log('%c ', 'color:blue', message.data)
+                    this.user = message.data
+                }
+            }
         }
     };
 </script>

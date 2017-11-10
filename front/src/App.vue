@@ -8,9 +8,15 @@
     export default {
         name: 'app',
         mounted() {
-
+            this.$options.sockets.onmessage = this.onmessage
+        },
+        methods: {
+            onmessage(message) {
+                const parsedMessage = JSON.parse(message.data)
+                window.console.log(`${message.type} : `, parsedMessage)
+            },
         }
-    };
+    }
 </script>
 
 <style>
