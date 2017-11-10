@@ -76,16 +76,16 @@
                     {
                         type: 'start',
                         data: {
-                            'name': this.name,
-                            'mail': this.mail,
+                            'name': this.user.name,
+                            'mail': this.user.mail,
                             'anonymous': anonymous,
                         }
                     }
                 ))
             },
             goAnonymous() {
-                this.name = 'Joueur Mystère 😎'
-                this.mail = 'mysteriousgamer@zenika.com'
+                this.user.name = 'Joueur Mystère 😎'
+                this.user.mail = 'mysteriousgamer@zenika.com'
                 this.go(true)
             }
         }

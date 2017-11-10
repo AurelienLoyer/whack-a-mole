@@ -45,6 +45,7 @@
             setTimeout(() => {
                 this.$socket.send(JSON.stringify({ type: 'getUsers' }))
                 this.$socket.send(JSON.stringify({ type: 'getWinner' }))
+                this.$socket.send(JSON.stringify({ type: 'getZenikiens' }))
                 this.$socket.onmessage = (message) => {
                     window.console.log('%c ', 'color:blue', message.data)
                     const parsedMessage = JSON.parse(message.data)
