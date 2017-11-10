@@ -1,8 +1,8 @@
 <template>
     <div>
-        <h3>Top 6 Joueurs</h3>
+        <h3>Top {{filteredUsers.length}} / {{ users.length }} Joueurs</h3>
         <ul class="scores">
-            <li v-for="(user, i) in users" :key="`user-${i}`">
+            <li v-for="(user, i) in filteredUsers" :key="`user-${i}`">
                 <span v-if="i === 0" class="fa-stack fa-lg num">
                     <i class="fa fa-circle fa-stack-2x"></i>
                     <i class="fa fa-trophy fa-stack-1x fa-inverse"></i>
@@ -30,6 +30,11 @@
                 default: {}
             }
         },
+        computed: {
+            filteredUsers(){
+                return this.users.sort((b,a) => (a.score > b.score) ? 1 : ((b.score > a.score) ? -1 : 0)).slice(0, 6)
+            }
+        }
     };
 </script>
 
