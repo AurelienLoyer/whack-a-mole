@@ -38,7 +38,7 @@
             return {
                 zenikiens: [],
                 users: [],
-                user: {}
+                user: {},
             }
         },
         mounted() {
@@ -58,16 +58,16 @@
         methods: {
             processData(message) {
                 if (message.type === 'zenikien') {
-                  window.console.log('%c ', 'color:blue', message.data)
                     this.zenikiens = Object.values(message.data)
                 }
                 if (message.type === 'users') {
                     this.users = Object.values(message.data)
                 }
-
                 if (message.type === 'winner') {
-                    window.console.log('%c ', 'color:blue', message.data)
                     this.user = message.data
+                    if(!this.user.name) {
+                        this.$router.push('/')
+                    }
                 }
             }
         }
