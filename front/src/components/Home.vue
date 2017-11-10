@@ -8,16 +8,16 @@
                     <span class="znk"></span>
                 </h1>
                 <form @submit.prevent="go">
-                    <input required type="text" v-model="name" name="" id="" placeholder="Nom">
-                    <input required type="email" v-model="mail" name="" id="" placeholder="Email">
+                    <input required type="text" v-model="user.name" placeholder="Nom">
+                    <input required type="email" v-model="user.mail" placeholder="Email">
                     <button type="submit">jouer</button>
                 </form>
                 <button class="simple-play" @click="goAnonymous">Jouer sans score</button>
             </div>
         </div>
         <div class="content">
-            <scores></scores>
-            <zenikien></zenikien>
+            <scores :users="users" :currentUser="user"></scores>
+            <zenikien :zenikiens="zenikiens"></zenikien>
         </div>
         <v-footer></v-footer>
     </div>
@@ -34,8 +34,12 @@
         name: "home",
         data() {
             return {
-                name: '',
-                mail: '',
+                user: {
+                    name: '',
+                    mail: '',
+                },
+                zenikiens: [],
+                users: [],
             }
         },
         components: {
@@ -43,15 +47,30 @@
             Zenikien,
             "v-footer": Footer
         },
+
         mounted() {
-            this.$options.sockets.onmessage = (message = {type : '', data: ''}) => {
-                const parsedMessage = JSON.parse(message.data)
-                if (parsedMessage.type === 'game') {
+            setTimeout(() => {
+                this.$socket.send(JSON.stringify({ type: 'getZenikiens' }))
+                this.$socket.send(JSON.stringify({ type: 'getUsers' }))
+                this.$socket.onmessage = (message) => {
+                    const parsedMessage = JSON.parse(message.data)
+                    this.processData(parsedMessage)
+                }
+            }, 10)
+        },
+
+        methods: {
+            processData(message) {
+                if (message.type === 'zenikien') {
+                    this.zenikiens = [].concat(Object.values(message.data))
+                }
+                if (message.type === 'users') {
+                    this.users = [].concat(Object.values(message.data))
+                }
+                if (message.type === 'game') {
                     this.$router.push('start')
                 }
-            }
-        },
-        methods: {
+            },
             go(anonymous = false) {
                 this.$socket.send(JSON.stringify(
                     {
@@ -70,7 +89,7 @@
                 this.go(true)
             }
         }
-    };
+    }
 </script>
 
 <style lang="scss" scoped>
@@ -103,11 +122,13 @@
         }
 
         @keyframes move {
-            0% {}
+            0% {
+            }
             50% {
                 background-position: 50% 40%, 30% 30%, 70% 60%;
             }
-            100% {}
+            100% {
+            }
         }
 
         .header-content {
@@ -194,10 +215,10 @@
         padding-top: 2%;
         width: 100%;
 
-        &>*:nth-child(1) {
+        & > *:nth-child(1) {
             width: 40%;
         }
-        &>*:nth-child(2) {
+        & > *:nth-child(2) {
             width: 20%;
         }
     }

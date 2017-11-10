@@ -43,7 +43,7 @@
                 }
 
                 if (parsedMessage.type === 'end') {
-                    this.$router.push('end')
+                    this.$router.push('end', parsedMessage.data)
                 }
 
             }
