@@ -35,11 +35,11 @@
         },
         watch: {
             message() {
-                if (this.message.type === 'press' && this.message.data && this.message.data <= this.buttons.length) {
-                    this.press(this.message.data - 1)
+                if (this.message.type === 'press' && this.message.data <= this.buttons.length) {
+                    this.press(this.message.data)
                 }
                 if (this.message.type === 'pop' && this.message.data && this.message.data.index <= this.buttons.length) {
-                    this.pop(this.message.data.index - 1, this.message.data.image)
+                    this.pop(this.message.data.index, this.message.data.image)
                 }
             }
         },
@@ -53,6 +53,9 @@
             pop(index, image) {
                 this.buttons[index].isActive = true
                 this.buttons[index].image = image
+                setTimeout(() => {
+                    this.buttons[index].isActive = false
+                }, 2000)
             },
         },
     };
