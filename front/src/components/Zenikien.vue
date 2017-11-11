@@ -1,6 +1,6 @@
 <template>
     <div class="zenikien">
-        <h3>Top {{sortedZenikiens.length}} Consultants</h3>
+        <h3>Top {{sortedZenikiens.length}} Consultants Tapés</h3>
         <ul>
             <li v-for="zenikien in sortedZenikiens" :key="zenikien.name">
                 <div class="circle">

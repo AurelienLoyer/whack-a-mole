@@ -1,7 +1,7 @@
 <template>
     <div class="countdown">
         <div class="time">
-            00:{{ time }}
+            {{ time }}
         </div>
     </div>
 </template>
@@ -21,8 +21,12 @@
             };
         },
         mounted() {
-            setInterval(() => {
-                this.time = this.time - 1
+            let inter = setInterval(() => {
+                if(this.time > 0) {
+                    this.time = this.time - 1
+                }else{
+                    this.time = ''
+                }
             },1000);
         }
     };
