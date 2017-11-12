@@ -21,7 +21,7 @@
                 </path>
 
             </g>
-            <g :id="`ball-${id}`">
+            <g :id="`ball-${id}`" class="ball" :class="jumping">
                 <image  width="500" height="500" x="-50" y="400"  :xlink:href="image" clip-path="url(#circleView)" />
             </g>
         </g>
@@ -32,10 +32,13 @@
 </template>
 
 <script>
-    import { TimelineMax } from 'gsap';
-
     export default {
         name: 'Hole',
+        data() {
+            return {
+                jumping: '',
+            }
+        },
         props: {
             image: {
                 type: String,
@@ -81,10 +84,11 @@
                     bamIcon.setAttribute('width', '0');
                     bamIcon.setAttribute('height', '0');
                 }, 300);
+                this.jumping = ''
             },
             jump() {
-                const tl = new TimelineMax({ repeat: 0 });
-                tl.to(`#ball-${this.id}`, 1, { y: -400, yoyo: true, repeat: 1 });
+                this.jumping ='jumping'
+                setTimeout(() => this.jumping = '' , 1000)
             },
         },
     };
@@ -100,4 +104,14 @@
     .bam {
         transition: all 0.3s;
     }
+
+    .ball{
+        transition: all 1s;
+    }
+
+    .ball.jumping{
+        transform: translateY(-400px);
+    }
+
+
 </style>
