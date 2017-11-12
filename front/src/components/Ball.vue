@@ -87,8 +87,11 @@
                 this.jumping = ''
             },
             jump() {
-                this.jumping ='jumping'
-                setTimeout(() => this.jumping = '' , 1000)
+                this.jumping = 'jumping-up'
+                setTimeout(() => {
+                    this.jumping = 'jumping-down'
+                    setTimeout(() => this.jumping = '', 1000)
+                }, 1000)
             },
         },
     };
@@ -105,12 +108,18 @@
         transition: all 0.3s;
     }
 
-    .ball{
+    .ball {
         transition: all 1s;
     }
 
-    .ball.jumping{
+    .ball.jumping-up {
+        transition: all 1s ease-out;
         transform: translateY(-400px);
+    }
+
+    .ball.jumping-down {
+        transition: all 1s ease-in;
+        transform: translateY(0);
     }
 
 
