@@ -30,7 +30,7 @@ module.exports = class GpioManager extends ManagerInterface {
             clicked: 100,
         });
 
-        buttons.on('pressed', function (pin) {
+        buttons.on('pressed', (pin) => {
             this.broadcast({ type: 'press', data: this.buttonsPins.indexOf(pin) + 1 });
         });
 
