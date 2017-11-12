@@ -109,15 +109,17 @@
     }
 
     .ball {
-        transition: all 1s;
+        display: none;
     }
 
     .ball.jumping-up {
+        display: block;
         transition: all 1s ease-out;
         transform: translateY(-400px);
     }
 
     .ball.jumping-down {
+        display: block;
         transition: all 1s ease-in;
         transform: translateY(0);
     }
