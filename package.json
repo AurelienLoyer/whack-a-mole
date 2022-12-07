@@ -5,7 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "events": "^1.1.1",
-    "express": "^4.16.2",
+    "express": "^4.17.3",
     "firebase": "^4.6.0",
     "keypress": "^0.2.1",
     "onoff": "^1.1.8",
